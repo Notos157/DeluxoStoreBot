@@ -1,0 +1,213 @@
+{
+  "titulo": "DELUXO STORE - FAZER PEDIDO",
+  "descricao": "Bem-vindo à **DELUXO STORE**!\n\nSelecione abaixo a categoria desejada no menu para visualizar os produtos e realizar seu pedido com total segurança.",
+  "rodape": "Deluxo Store © Todos os direitos reservados.",
+  "cargoStaffId": "1529320245796540436",
+  "categoriaTicketsId": "1528140828860612769",
+  "chavePix": "sua-chave-pix-aqui",
+  "painelLojaChannelId": "1530130720930926632",
+  "painelLojaMessageId": "1531842437847191573",
+  "categorias": [
+    {
+      "id": "cat_roblox",
+      "nome": "Death Ball",
+      "descricao": "Gemas e GamePass",
+      "produtos": [
+        {
+          "id": "prod_1",
+          "nome": "1M Gemas",
+          "preco": 1.5,
+          "emoji": "<:Gamas:1529615376126705674>"
+        },
+        {
+          "id": "prod_2",
+          "nome": "5M Gemas",
+          "preco": 7.5,
+          "emoji": "<:gema:1529615436306714717>"
+        },
+        {
+          "id": "prod_1784733399309",
+          "nome": "10M Gemas",
+          "preco": 15,
+          "emoji": "<:gema3:1529615482053988482>"
+        },
+        {
+          "id": "prod_1784733424522",
+          "nome": "25M Gemas",
+          "preco": 37.5,
+          "emoji": "<:gema4:1529615505416257587>"
+        },
+        {
+          "id": "prod_1784733454864",
+          "nome": "50M Gemas",
+          "preco": 75,
+          "emoji": "<:gema5:1529615529717927936>"
+        },
+        {
+          "id": "prod_1784751631809",
+          "nome": "Assinatura [VIP]",
+          "preco": 12,
+          "emoji": "<:vip:1529615552836927689>"
+        }
+      ],
+      "emoji": "<:DeathBall:1531005397295566928>",
+      "valorMinimo": 1.5
+    },
+    {
+      "id": "cat_servicos",
+      "nome": "Grow a Garden 2",
+      "descricao": "Seeds, frutas e pets",
+      "produtos": [
+        {
+          "id": "prod_1784762092066",
+          "nome": "Super Watering [10 Unidades]",
+          "preco": 0.8,
+          "emoji": "<:ee2eqe2qe2q:1529766471213912074>"
+        },
+        {
+          "id": "prod_1784762541039",
+          "nome": "Super Splinker [10 Unidades]",
+          "preco": 0.3,
+          "emoji": "<:e222eqq2e2qeqq2e:1529766496262164492>"
+        },
+        {
+          "id": "prod_1784762751003",
+          "nome": "Star Fruit",
+          "preco": 1.9,
+          "emoji": "<:1529122115725561968:1529628156347027616>"
+        },
+        {
+          "id": "prod_1784762853956",
+          "nome": "Sun Bloom",
+          "preco": 0.6,
+          "emoji": "<:1526951360191398081:1529628109056507959>"
+        },
+        {
+          "id": "prod_1784763078139",
+          "nome": "Dragon's Breath",
+          "preco": 0.4,
+          "emoji": "<:1520181064826359980:1529627883516203171>"
+        },
+        {
+          "id": "prod_1784763104342",
+          "nome": "Ghost Pepper",
+          "preco": 0.2,
+          "emoji": "<:1520935106188021800:1529627932518252604>"
+        },
+        {
+          "id": "prod_1784763209607",
+          "nome": "Hypno Bloom",
+          "preco": 0.15,
+          "emoji": "<:1522703904783990804:1529628082548248768>"
+        },
+        {
+          "id": "prod_1784763263186",
+          "nome": "Moon Bloom",
+          "preco": 0.15,
+          "emoji": "<:1521981638911725670:1529627976583483534>"
+        },
+        {
+          "id": "prod_1784763288623",
+          "nome": "Mega Seed",
+          "preco": 0.12,
+          "emoji": "<:wdawdawadwdwdaawd:1529770785382596729>"
+        },
+        {
+          "id": "prod_1784763440511",
+          "nome": "Rainbow Seed [10 Unidades]",
+          "preco": 0.2,
+          "emoji": "<:2qq2eq2e22eqq2e:1529766518303494304>"
+        },
+        {
+          "id": "prod_1784763522038",
+          "nome": "Gold Seed [10 Unidades]",
+          "preco": 0.1,
+          "emoji": "<:GoldSeed:1529770420956565635>"
+        },
+        {
+          "id": "prod_1785026423240",
+          "nome": "1B Sheckles",
+          "preco": 1,
+          "emoji": "<:download1:1530736146231988314>"
+        },
+        {
+          "id": "prod_1785026529587",
+          "nome": "5B Sheckles",
+          "preco": 5,
+          "emoji": "<:download1:1530736146231988314>"
+        },
+        {
+          "id": "prod_1785026550776",
+          "nome": "10B Sheckles",
+          "preco": 10,
+          "emoji": "<:download1:1530736146231988314>"
+        }
+      ],
+      "emoji": "<:GG2:1531005372050178058>",
+      "valorMinimo": 5
+    },
+    {
+      "id": "cat_1785200510458",
+      "nome": "Robux",
+      "descricao": "Robux e Gamepass",
+      "valorMinimo": 0,
+      "emoji": "<:robux:1531474740693303509>",
+      "produtos": [
+        {
+          "id": "prod_1785200909628",
+          "nome": "100 Robux",
+          "preco": 3.3,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785200986521",
+          "nome": "300 Robux",
+          "preco": 9.9,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201009087",
+          "nome": "400 Robux",
+          "preco": 13.2,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201035244",
+          "nome": "500 Robux",
+          "preco": 16.5,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201061805",
+          "nome": "600 Robux",
+          "preco": 19.8,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201129704",
+          "nome": "800 Robux",
+          "preco": 26.4,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201214555",
+          "nome": "900 Robux",
+          "preco": 29.7,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201237309",
+          "nome": "1000 Robux",
+          "preco": 33,
+          "emoji": "<:robux:1531474740693303509>"
+        },
+        {
+          "id": "prod_1785201399942",
+          "nome": "GamePass Personalizada",
+          "preco": 0.001,
+          "emoji": "<:gamepass:1531474074667188244>"
+        }
+      ]
+    }
+  ]
+}
