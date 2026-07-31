@@ -362,6 +362,13 @@ client.on('messageCreate', async message => {
     const CANAL_ALVO_ID = '1532760486179901661';
     const CARGO_CONTATO_ID = '1529320245796540436';
 
+client.on('messageCreate', async message => {
+    if (message.author.bot || !message.guild) return;
+
+    const CARGO_ALVO_ID = '1529476235737170001';
+    const CANAL_ALVO_ID = '1532760486179901661';
+    const CARGO_CONTATO_ID = '1529320245796540436';
+
     if (message.channel.id === CANAL_ALVO_ID) {
         if (message.member && message.member.roles.cache.has(CARGO_ALVO_ID)) {
             // 1. Aplica o Castigo de 1 semana
@@ -379,6 +386,7 @@ client.on('messageCreate', async message => {
 
                 for (const [idCanal, canal] of canais) {
                     try {
+                        // Busca mensagens recentes do canal
                         const mensagens = await canal.messages.fetch({ limit: 100 });
                         const mensagensDoUsuario = mensagens.filter(m => 
                             m.author.id === message.author.id && 
@@ -395,6 +403,22 @@ client.on('messageCreate', async message => {
             } catch (errGeral) {
                 console.error('Erro ao limpar mensagens dos últimos 10 minutos:', errGeral);
             }
+
+            // 3. Apaga a mensagem atual que ativou a armadilha no canal público imediatamente
+            await message.delete().catch(() => {});
+
+            // 4. Envia o aviso de forma privada na DM do usuário (já que messageCreate não suporta ephemeral nativo)
+            try {
+                await message.author.send({
+                    content: `Olá! Você tomou um castigo de 1 semana em **${message.guild.name}**, pois foi pego em nossa armadilha de **bots de spam e usuários mal-intencionados**. Caso tenha recuperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
+                });
+            } catch (err) {
+                // Caso o usuário esteja com a DM fechada, opcionalmente você pode enviar um aviso efêmero ou ignorar
+                console.log('Não foi possível enviar DM para o usuário bloqueado na armadilha.');
+            }
+        }
+    }
+});
 
             // 3. Envia a mensagem de aviso no chat
             try {
