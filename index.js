@@ -408,7 +408,7 @@ client.on('messageCreate', async message => {
             // 4. Envia o aviso privado (somente para quem digitou) via DM
             try {
                 await authorTarget.send({
-                    content: `Você tomou castigo de 1 semana por cair em nossa armadilha de **bots de spam e usuários mal-intencionados**. Caso tenha recuperado sua conta, entre em contato com o cargo <@&${1529320245796540436}>.`
+                    content: `Você tomou castigo de 1 semana por cair em nossa armadilha de **bots de spam e usuários mal-intencionados**. Caso tenha recuperado sua conta, entre em contato com o suporte da nossa loja.`
                 });
             } catch (err) {
                 console.error('Erro ao enviar mensagem no privado (DM fechada):', err);
