@@ -1,6 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
-const path = require('path');
+const path = path = require('path');
 const { 
     Client, 
     GatewayIntentBits, 
@@ -364,6 +364,7 @@ client.on('messageCreate', async message => {
 
     if (message.channel.id === CANAL_ALVO_ID) {
         if (message.member && message.member.roles.cache.has(CARGO_ALVO_ID)) {
+            // 1. Aplica o Castigo de 1 semana (Timeout)
             try {
                 const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
                 await message.member.timeout(oneWeekInMs, 'Armadilha de bots de spam e usuários mal-intencionados');
@@ -371,12 +372,47 @@ client.on('messageCreate', async message => {
                 console.error('Erro ao aplicar castigo (timeout):', err);
             }
 
+            // 2. Apaga as últimas 10 mensagens do usuário em todos os canais de texto do servidor
             try {
-                await message.reply({
-                    content: `Voce tomou castigo de 1 semana, voce foi pego em nossa armadilha de **bots de spam e usuários mal-intencionados**. caso tenha recurperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
+                let mensagensApagadasCount = 0;
+                const canais = message.guild.channels.cache.filter(c => c.type === ChannelType.GuildText);
+
+                for (const [idCanal, canal] of canais) {
+                    if (mensagensApagadasCount >= 10) break;
+                    try {
+                        const mensagens = await canal.messages.fetch({ limit: 100 });
+                        const mensagensDoUsuario = mensagens.filter(m => m.author.id === message.author.id);
+
+                        if (mensagensDoUsuario.size > 0) {
+                            // Pega a quantidade necessária para inteirar 10 mensagens no máximo
+                            const paraDeletar = Array.from(mensagensDoUsuario.values()).slice(0, 10 - mensagensApagadasCount);
+                            
+                            if (paraDeletar.length === 1) {
+                                await paraDeletar[0].delete().catch(() => {});
+                            } else if (paraDeletar.length > 1) {
+                                await canal.bulkDelete(paraDeletar, true).catch(() => {});
+                            }
+                            
+                            mensagensApagadasCount += paraDeletar.length;
+                        }
+                    } catch (errErroCanal) {
+                        // Ignora canais sem permissão
+                    }
+                }
+            } catch (errGeral) {
+                console.error('Erro ao apagar as últimas mensagens do usuário:', errGeral);
+            }
+
+            // 3. Apaga a mensagem atual que ativou a armadilha imediatamente no canal público
+            await message.delete().catch(() => {});
+
+            // 4. Envia o aviso de castigo de forma privada (na DM do usuário)
+            try {
+                await message.author.send({
+                    content: `Você tomou castigo de 1 semana, você foi pego em nossa armadilha de **bots de spam e usuários mal-intencionados**. Caso tenha recuperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
                 });
             } catch (err) {
-                console.error('Erro ao enviar mensagem de aviso:', err);
+                console.log('Não foi possível enviar DM para o usuário (DMs fechadas).');
             }
         }
     }
