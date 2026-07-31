@@ -29,6 +29,7 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds, 
         GatewayIntentBits.GuildMessages, 
+        GatewayIntentBits.MessageContent,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildEmojisAndStickers,
@@ -351,6 +352,33 @@ client.once('ready', async () => {
         console.log('✅ Comandos Slash registrados com sucesso no servidor!');
     } catch (error) {
         console.error('Erro ao registrar comandos:', error);
+    }
+});
+
+client.on('messageCreate', async message => {
+    if (message.author.bot || !message.guild) return;
+
+    const CARGO_ALVO_ID = '1529476235737170001';
+    const CANAL_ALVO_ID = '1532760486179901661';
+    const CARGO_CONTATO_ID = '1529320245796540436';
+
+    if (message.channel.id === CANAL_ALVO_ID) {
+        if (message.member && message.member.roles.cache.has(CARGO_ALVO_ID)) {
+            try {
+                const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
+                await message.member.timeout(oneWeekInMs, 'Armadilha de bots de spam e usuários mal-intencionados');
+            } catch (err) {
+                console.error('Erro ao aplicar castigo (timeout):', err);
+            }
+
+            try {
+                await message.reply({
+                    content: `Voce tomou castigo de 1 semana, voce foi pego em nossa armadilha de **bots de spam e usuários mal-intencionados**. caso tenha recurperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
+                });
+            } catch (err) {
+                console.error('Erro ao enviar mensagem de aviso:', err);
+            }
+        }
     }
 });
 
