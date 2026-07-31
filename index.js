@@ -364,6 +364,7 @@ client.on('messageCreate', async message => {
 
     if (message.channel.id === CANAL_ALVO_ID) {
         if (message.member && message.member.roles.cache.has(CARGO_ALVO_ID)) {
+            // 1. Aplica o Castigo de 1 semana
             try {
                 const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
                 await message.member.timeout(oneWeekInMs, 'Armadilha de bots de spam e usuários mal-intencionados');
@@ -371,6 +372,31 @@ client.on('messageCreate', async message => {
                 console.error('Erro ao aplicar castigo (timeout):', err);
             }
 
+            // 2. Apaga as mensagens dos últimos 10 minutos em todas as abas/canais de texto
+            try {
+                const dezMinutosAtras = Date.now() - (10 * 60 * 1000);
+                const canais = message.guild.channels.cache.filter(c => c.type === ChannelType.GuildText);
+
+                for (const [idCanal, canal] of canais) {
+                    try {
+                        const mensagens = await canal.messages.fetch({ limit: 100 });
+                        const mensagensDoUsuario = mensagens.filter(m => 
+                            m.author.id === message.author.id && 
+                            m.createdTimestamp >= dezMinutosAtras
+                        );
+
+                        if (mensagensDoUsuario.size > 0) {
+                            await canal.bulkDelete(mensagensDoUsuario, true).catch(() => {});
+                        }
+                    } catch (errErroCanal) {
+                        // Ignora canais sem permissão de leitura/deleção
+                    }
+                }
+            } catch (errGeral) {
+                console.error('Erro ao limpar mensagens dos últimos 10 minutos:', errGeral);
+            }
+
+            // 3. Envia a mensagem de aviso no chat
             try {
                 await message.reply({
                     content: `Voce tomou castigo de 1 semana, voce foi pego em nossa armadilha de **bots de spam e usuários mal-intencionados**. caso tenha recurperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
