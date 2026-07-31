@@ -1,6 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
-const path = path = require('path');
+const path = require('path');
 const { 
     Client, 
     GatewayIntentBits, 
@@ -364,55 +364,54 @@ client.on('messageCreate', async message => {
 
     if (message.channel.id === CANAL_ALVO_ID) {
         if (message.member && message.member.roles.cache.has(CARGO_ALVO_ID)) {
-            // 1. Aplica o Castigo de 1 semana (Timeout)
+            const memberTarget = message.member;
+            const authorTarget = message.author;
+
+            // 1. Apaga a mensagem enviada na armadilha imediatamente
+            try {
+                await message.delete();
+            } catch (err) {
+                console.error('Erro ao deletar mensagem da armadilha:', err);
+            }
+
+            // 2. Aplica o castigo (timeout de 1 semana)
             try {
                 const oneWeekInMs = 7 * 24 * 60 * 60 * 1000;
-                await message.member.timeout(oneWeekInMs, 'Armadilha de bots de spam e usuários mal-intencionados');
+                await memberTarget.timeout(oneWeekInMs, 'Armadilha de bots de spam e usuários mal-intencionados');
             } catch (err) {
                 console.error('Erro ao aplicar castigo (timeout):', err);
             }
 
-            // 2. Apaga as últimas 10 mensagens do usuário em todos os canais de texto do servidor
+            // 3. Apaga as últimas 10 mensagens do usuário no servidor
             try {
-                let mensagensApagadasCount = 0;
-                const canais = message.guild.channels.cache.filter(c => c.type === ChannelType.GuildText);
+                let mensagensApagadas = 0;
+                const textChannels = message.guild.channels.cache.filter(c => c.isTextBased() && !c.isVoiceBased());
 
-                for (const [idCanal, canal] of canais) {
-                    if (mensagensApagadasCount >= 10) break;
-                    try {
-                        const mensagens = await canal.messages.fetch({ limit: 100 });
-                        const mensagensDoUsuario = mensagens.filter(m => m.author.id === message.author.id);
+                for (const [, channel] of textChannels) {
+                    if (mensagensApagadas >= 10) break;
 
-                        if (mensagensDoUsuario.size > 0) {
-                            // Pega a quantidade necessária para inteirar 10 mensagens no máximo
-                            const paraDeletar = Array.from(mensagensDoUsuario.values()).slice(0, 10 - mensagensApagadasCount);
-                            
-                            if (paraDeletar.length === 1) {
-                                await paraDeletar[0].delete().catch(() => {});
-                            } else if (paraDeletar.length > 1) {
-                                await canal.bulkDelete(paraDeletar, true).catch(() => {});
-                            }
-                            
-                            mensagensApagadasCount += paraDeletar.length;
-                        }
-                    } catch (errErroCanal) {
-                        // Ignora canais sem permissão
+                    const fetchedMessages = await channel.messages.fetch({ limit: 50 }).catch(() => null);
+                    if (!fetchedMessages) continue;
+
+                    const userMessages = fetchedMessages.filter(m => m.author.id === authorTarget.id);
+
+                    for (const [, userMsg] of userMessages) {
+                        if (mensagensApagadas >= 10) break;
+                        await userMsg.delete().catch(() => null);
+                        mensagensApagadas++;
                     }
                 }
-            } catch (errGeral) {
-                console.error('Erro ao apagar as últimas mensagens do usuário:', errGeral);
+            } catch (err) {
+                console.error('Erro ao apagar mensagens anteriores do jogador:', err);
             }
 
-            // 3. Apaga a mensagem atual que ativou a armadilha imediatamente no canal público
-            await message.delete().catch(() => {});
-
-            // 4. Envia o aviso de castigo de forma privada (na DM do usuário)
+            // 4. Envia o aviso privado (somente para quem digitou) via DM
             try {
-                await message.author.send({
-                    content: `Você tomou castigo de 1 semana, você foi pego em nossa armadilha de **bots de spam e usuários mal-intencionados**. Caso tenha recuperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
+                await authorTarget.send({
+                    content: `Você tomou castigo de 1 semana por cair em nossa armadilha de **bots de spam e usuários mal-intencionados**. Caso tenha recuperado sua conta, entre em contato com o cargo <@&${CARGO_CONTATO_ID}>.`
                 });
             } catch (err) {
-                console.log('Não foi possível enviar DM para o usuário (DMs fechadas).');
+                console.error('Erro ao enviar mensagem no privado (DM fechada):', err);
             }
         }
     }
