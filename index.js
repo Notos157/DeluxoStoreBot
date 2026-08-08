@@ -61,6 +61,48 @@ const avaliacoesPendentes = new Map();
 const produtoEditCache = new Map();
 const categoriaEditCache = new Map();
 
+// FUNÇÃO PARA GERAR O MENU DE EMOJIS (ADICIONADA PARA CORRIGIR O ERRO)
+async function gerarMenuEmojis(guild, customIdPrefix, itemId, pagina = 1) {
+    const emojis = Array.from(guild.emojis.cache.values());
+    const pageSize = 22;
+    const start = (pagina - 1) * pageSize;
+    const pageEmojis = emojis.slice(start, start + pageSize);
+
+    const options = [
+        {
+            label: '❌ Sem Emoji',
+            value: 'sem_emoji',
+            description: 'Remover ou não utilizar emoji'
+        },
+        ...pageEmojis.map(e => ({
+            label: e.name.slice(0, 100),
+            value: `custom_${e.id}`,
+            emoji: { id: e.id, name: e.name }
+        }))
+    ];
+
+    if (emojis.length > pageSize * pagina) {
+        options.push({
+            label: 'Próxima Página ▶️',
+            value: 'pagina_2',
+            description: 'Ver mais emojis do servidor'
+        });
+    } else if (pagina > 1) {
+        options.push({
+            label: '◀️ Página Anterior',
+            value: 'pagina_1',
+            description: 'Voltar para a página anterior'
+        });
+    }
+
+    return new ActionRowBuilder().addComponents(
+        new StringSelectMenuBuilder()
+            .setCustomId(`${customIdPrefix}_${itemId}`)
+            .setPlaceholder('Escolha um emoji...')
+            .addOptions(options.slice(0, 25))
+    );
+}
+
 const commands = [
     new SlashCommandBuilder()
         .setName('setup-loja')
@@ -997,7 +1039,7 @@ client.on('interactionCreate', async interaction => {
         categoriaEditCache.delete(interaction.user.id);
 
         return interaction.update({
-            content: `✅ Categoria **${categoria.nome}** atualizada com sucesso (Mín: R$ ${(categoria.valorMinimo || 0).toFixed(2)}) com el emoji ${categoria.emoji || 'Nenhum'}!`,
+            content: `✅ Categoria **${categoria.nome}** atualizada com sucesso (Mín: R$ ${(categoria.valorMinimo || 0).toFixed(2)}) com o emoji ${categoria.emoji || 'Nenhum'}!`,
             components: []
         });
     }
